@@ -1,6 +1,6 @@
 class GPUInstance:
     def __init__(self, specs, operating_systems, network, storage_local,
-                 datacenter, pricing, storage_network):
+                 pricing, storage_network, datacenter=None):
         self.pricing = pricing
         self.specs = specs
         self.network = network
@@ -23,14 +23,24 @@ class GPUInstance:
         return {
             'pricing': [pricing.to_dict() for pricing in self.pricing],
             'specs': self.specs.to_dict(),
-            'operating_systems': self.operating_systems,
+            'operating_systems': (self.operating_systems.to_dict()
+                                  if self.operating_systems else None),
             'network': self.network.to_dict(),
-            'datacenter': self.datacenter.to_dict(),
+            'datacenter': (self.datacenter.to_dict()
+                           if self.datacenter else None),
             'storage_local': self.storage_local.to_dict(),
             'storage_network': (self.storage_network.to_dict()
                                 if self.storage_network else None)
         }
 
+class GPUInstanceOperatingSystems:
+    def __init__(self, operating_systems):
+        self.operating_systems = operating_systems
+
+    def to_dict(self):
+        return {
+            'operating_systems': self.operating_systems
+        }
 
 class GPUInstancePricing:
     def __init__(self, hourly_price=None, spot_price=None, monthly_price=None,
@@ -88,7 +98,7 @@ class GPUInstanceDatacenter:
 
 
 class GPUInstanceSpecs:
-    def __init__(self, gpu_count, gpu_model, ram, cpu_model, cpu_count):
+    def __init__(self, gpu_count, gpu_model, ram, cpu_model='generic', cpu_count=None):
         self.gpu_count = gpu_count
         self.gpu_model = gpu_model
         self.ram = ram
@@ -106,8 +116,8 @@ class GPUInstanceSpecs:
 
 
 class GPUInstanceStorageLocal:
-    def __init__(self, amount, price, price_incremental, adjust,
-                 storage_only_billing):
+    def __init__(self, amount, adjust, storage_only_billing, 
+                 price=None, price_incremental=None):
         self.adjust = adjust
         self.storage_only_billing = storage_only_billing
         self.amount = amount
@@ -118,7 +128,8 @@ class GPUInstanceStorageLocal:
         return {
             'amount': self.amount,
             'price': self.price,
-            'price_incremental': self.price_incremental.to_dict(),
+            'price_incremental': (self.price_incremental.to_dict()
+                                  if self.price_incremental else None),
             'adjust': self.adjust,
             'storage_only_billing': self.storage_only_billing
         }

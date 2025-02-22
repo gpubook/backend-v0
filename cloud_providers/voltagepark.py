@@ -9,6 +9,7 @@ from gpu_instances import (
     GPUInstanceSpecs,
     GPUInstanceNetwork,
     GPUInstanceDatacenter,
+    GPUInstanceOperatingSystems,
 )
 
 
@@ -32,7 +33,6 @@ class VoltagePark(CloudProvider):
 
         for instance in response.json()['virtual_machines'].values():
             for preconfig in preconfigs:
-                print(preconfig)
                 if instance['preconfig_id'] == preconfig['uuid']:
                     preconfig['count'] += 1
 
@@ -47,7 +47,9 @@ class VoltagePark(CloudProvider):
                         cpu_model='intel-xeon-platinum-8470',
                         cpu_count=preconfig['cpu_count'],
                     ),
-                    operating_systems='ubuntu-24.04-lts',
+                    operating_systems=GPUInstanceOperatingSystems(
+                        ['ubuntu-24.04-lts']
+                    ),
                     network=GPUInstanceNetwork(
                         speed=100000,
                         ipv4=False,
