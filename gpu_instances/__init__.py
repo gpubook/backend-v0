@@ -38,9 +38,7 @@ class GPUInstanceOperatingSystems:
         self.operating_systems = operating_systems
 
     def to_dict(self):
-        return {
-            'operating_systems': self.operating_systems
-        }
+        return self.operating_systems
 
 class GPUInstancePricing:
     def __init__(self, hourly_price=None, spot_price=None, monthly_price=None,
